@@ -1,20 +1,16 @@
-const https = require("https")
+import { Controller, Get} from '@midwayjs/decorator';
+import axios from 'axios'; 
 const cheerio = require('cheerio');
-const url = "https://www.baidu.com"
+const url = "http://www.baidu.com/";
 
-https.get(url, (res) => {
-    let html = '';  
-    res.on('data', (data) => {
-      html += data;
-    });
-  
-    res.on('end', () => { 
-        var t = getPageSrc(html)
-        console.log(t)
-    }); 
-  }).on('error', () => { 
-    console.log('获取网页信息错误');
-  });
+@Controller('/')
+export class HomeController {
+    @Get('/')
+    async home(): Promise<string> {
+      const result = (await axios.get(url)).data;
+      console.log(result)
+      return getPageSrc(result.toString())
+  }}
 
 function getPageSrc(html) {
     const $ = cheerio.load(html);
